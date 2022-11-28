@@ -1,0 +1,9 @@
+.consolaFondo {
+    background: #eaf3f9;
+    color: #003a60;
+    font-size: 14px;
+    white-space: pre;
+    font-family: monaco, monospace, Consolas;
+    font-style: normal;
+    font-variant: normal;
+}
