@@ -403,17 +403,67 @@ webix.ready(async function () {
 											$$("commandList").remove($$("commandList").getSelectedId());
 											saveLocalStore();
 										}
-									}]
+									}, {},
+									{
+										view: "button",
+										type: "icon",
+										icon: "download",
+										label: "Importar",
+										width: 30,
+										click: function () {
+											var element = document.createElement('a');
+											var text = JSON.stringify(commands);
+											element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+											element.setAttribute('download', "commands.json");
+											element.style.display = 'none';
+											document.body.appendChild(element);
+											element.click();
+											document.body.removeChild(element);
+										}
+									},
+									{
+										view: "button",
+										type: "icon",
+										icon: "upload",
+										label: "Importar",
+										width: 30,
+										click: function () {
+											let input = document.createElement('input');
+											input.type = 'file';
+											input.onchange = _ => {
+												let files = Array.from(input.files);
+												file = files[0];
+												filename = file.name;
+												var reader = new FileReader();
+												reader.readAsText(file, 'UTF-8');
+												reader.onload = readerEvent => {
+													var content = readerEvent.target.result;
+													commands = JSON.parse(content);
+													$$("commandList").parse(content);
+													$$("commandList").refresh();
+													saveLocalStore();
+												}
+											};
+											input.click();
+										}
+									},
+									]
 								},
 								{
 									id: 'commandList',
 									width: 200,
 									view: "datatable",
 									header: false,
-									autoConfig: true,
 									autoWidth: true,
 									drag: true,
 									data: commands,
+									autoConfig: true,
+									// columns: [
+									// 	{
+									// 		id: "Comando", header: "Comando",
+									// 		fillspace: true,
+									// 	},
+									// ],
 									on: {
 										'onItemClick': function (id, e, trg) {
 											var record = $$('commandList').getItem(id.row);
